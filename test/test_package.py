@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Unit tests for  package."""
-import os
-import subprocess
 import unittest
 from glob import glob
 
@@ -72,55 +70,6 @@ class StandardInputOutputTest(unittest.TestCase):
 
         return new_options
 
-    def standard_test(self, options={}):
-        """Checks standard convert success.
-
-        Args:
-            options (dict): Options in dictionary form, e.g. {
-                'OPTION_NAME': 'VALUE',
-                'OPTION_2_NAME': ...
-            }
-
-        Side effects:
-            assertEqual()
-        """
-        out_dir = self.output_path()
-
-        subprocess.call(['rm', '-rf', out_dir])
-        os.makedirs(out_dir)
-        defaults = {
-            'merge': self.input_files('target'),
-            'merge_all': None,
-            'correct': None,
-            'no_diverse': None,
-            'diverse': None,
-            'add': None,
-            'ignore': None,
-            'carry': None,
-            'outpath': self.output_path(),
-            'xlsxfile': self.input_files('source')
-        }
-        kwargs = defaults if not options else {**defaults, **options}
-        borrow_api(**kwargs)
-
-        expected = 'N files: ' + str(len(self.input_files('target')))
-        actual = 'N files: ' + str(len(self.output_files()))
-
-        # Consider maybe this instead?
-        # import pandas as pd
-        # df1 = pd.read_excel('excel1.xlsx')
-        # df2 = pd.read_excel('excel2.xlsx')
-        # difference = df1[df1 != df2]
-
-        self.assertEqual(expected, actual)
-
-
-# class Merge(StandardInputOutputTest):
-#     """A standard test case"""
-#
-#     def test_convert(self):
-#         """Test that works as expected."""
-#         self.standard_test()
 
 class Borrow(unittest.TestCase):
     """Borrow test"""
