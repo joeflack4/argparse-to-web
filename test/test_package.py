@@ -4,7 +4,7 @@
 import unittest
 from glob import glob
 
-from pmix.borrow import borrow as borrow_api, parser as borrow_parser
+from pmix.borrow import borrow as borrow_api, cli_parser as borrow_parser
 
 from argparse_to_web import ArgparseToWeb
 # from argparse_to_web.argparse_to_web import create_app
@@ -77,7 +77,7 @@ class Borrow(unittest.TestCase):
     def test_run(self):
         """Test that it runs"""
         app = ArgparseToWeb(
-            parser=borrow_parser,
+            parser=borrow_parser(),
             python_api=borrow_api,
             debug=True,
             title='XLSForm Borrow',
@@ -129,7 +129,72 @@ class Borrow(unittest.TestCase):
                 'on, no translation will be supplied.',
             },)
         app.serve()
-        # TODO: For now this is smoke testing
+
+        # TODO: Make a real test. For now, this is for manual smoke testing.
+        self.assertTrue(True)
+
+
+class QTools(unittest.TestCase):
+    """Borrow test"""
+
+    def test_run(self):
+        """Test that it runs"""
+        app = ArgparseToWeb(
+            # parser=qtools_parser,
+            # python_api=qtools_api,
+            debug=True,
+            # TODO
+            title='XLSForm Borrow',
+            subtitle='Generates translation summary files and merges '
+                     'translations between XLSForms.',
+            upload_options=['xlsxfiles', 'merge'],
+            ignore_options=['outfile', 'outdir', 'merge_all'],
+            advanced_options=[
+                'no_diverse', 'carry', 'correct', 'add', 'ignore', 'diverse'],
+            option_order=['xlsxfiles', 'merge'],
+            send_files_option='outdir',
+            label_overrides={
+                'xlsxfiles': 'Source files',
+                'merge': 'Target files',
+                'correct': 'Trusted files',
+                'no_diverse': 'Exclude translations with duplicates',
+                'diverse': 'Enumerate duplicates*',
+                'add': 'Add languages',
+                'ignore': 'Ignore languages',
+                'carry': 'Carry over',
+            },
+            help_overrides={
+                'xlsxfiles': 'One or more XLSForms. If no "target files" are '
+                             'provided, then a translation file will be generated based on'
+                             ' the contents of these forms. If "target files" are provided'
+                             ', then new versions of those target files will be created, '
+                             'with translations from these files imported.',
+                'merge': 'One or more XLSForms that receives the translations '
+                         'from provided "source files".',
+                'correct': 'One or more file names of the provided '
+                           '"source files" to mark as "trusted". This is a way to give '
+                           'some source files precedence over others. If an English  '
+                           'string of text has multiple translations for the same '
+                           'language between forms that are marked trusted and forms not '
+                           'marked trusted, the non-trusted ones will be ignored.',
+                'no_diverse': 'If there are multiple'
+                              ' translations for a single English string of text in a given '
+                              'language, exclude all of them.',
+                'diverse': 'Supply a language. Creates a worksheet that shows '
+                           'only strings with duplicate translations for the language. '
+                           '*Can only use when not providing any "target files".',
+                'add': 'Add one or more languages. The translation file will '
+                       'have an additional column for each language. Or, the merged '
+                       'XLSForm will include columns for that language and have '
+                       'translations for them if possible.',
+                'ignore': 'One or more languages to ignore.',
+                'carry': 'If translations are missing, carry over the same '
+                         'text from the source language. If this option is not turned '
+                         'on, no translation will be supplied.',
+            }, )
+        app.serve()
+
+        # TODO: Make a real test. For now, this is for manual smoke testing.
         self.assertTrue(True)
 
 
