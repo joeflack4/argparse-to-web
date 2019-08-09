@@ -2,3 +2,4 @@ Flask
 pmix
 xlrd
 XlsxWriter
+qtools3
